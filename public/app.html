@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PSE — Sebutharga & Invois</title>
+  <link rel="stylesheet" href="/css/system.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <img src="/assets/logo.png" alt="PSE" onerror="this.style.display='none'">
+        <div>
+          <strong>PSE System</strong>
+          <small id="userName">—</small>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-btn active" data-view="dashboard">📊 Dashboard</button>
+        <button class="nav-btn" data-view="editor">📝 Dokumen Baru</button>
+        <button class="nav-btn" data-view="archive">📁 Arkib Dokumen</button>
+        <button class="nav-btn" data-view="clients">👥 Pelanggan</button>
+        <button class="nav-btn" data-view="settings">⚙️ Tetapan</button>
+      </nav>
+      <button class="nav-btn logout-btn" id="btnLogout">🚪 Log Keluar</button>
+    </aside>
+
+    <main class="main-content">
+      <!-- DASHBOARD -->
+      <section id="view-dashboard" class="view active">
+        <header class="page-header">
+          <h1>Dashboard</h1>
+          <button class="btn btn-primary" onclick="App.goEditor()">+ Dokumen Baru</button>
+        </header>
+        <div class="stats-grid" id="statsGrid"></div>
+        <div class="two-col">
+          <div class="card">
+            <h3>Dokumen Terkini</h3>
+            <div id="recentDocs"></div>
+          </div>
+          <div class="card">
+            <h3>Log Aktiviti</h3>
+            <div id="activityLog"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EDITOR -->
+      <section id="view-editor" class="view">
+        <header class="page-header">
+          <h1 id="editorTitle">Dokumen Baru</h1>
+          <div class="header-btns">
+            <span id="docStatusBadge" class="badge badge-draft">DRAF</span>
+            <button class="btn btn-secondary" id="btnConvertInv" style="display:none">→ Invois</button>
+            <button class="btn btn-success" id="btnFinalize">Simpan & Sahkan</button>
+            <button class="btn btn-secondary" id="btnNewDoc" disabled>Dokumen Baru</button>
+            <button class="btn btn-primary" id="btnPrint" disabled>Cetak PDF</button>
+          </div>
+        </header>
+        <div class="editor-grid">
+          <div class="editor-form">
+            <div class="card">
+              <h3>Jenis & Nombor</h3>
+              <div class="type-toggle">
+                <label><input type="radio" name="docType" value="quotation" checked> Sebutharga</label>
+                <label><input type="radio" name="docType" value="invoice"> Invois</label>
+              </div>
+              <label>No. Dokumen</label>
+              <input id="docNumber" readonly>
+              <label>Kod Pelanggan</label>
+              <input id="clientCode" placeholder="KOSISWA">
+              <div id="refQuoWrap" hidden>
+                <label>Ruj. Sebutharga</label>
+                <input id="refQuotation">
+              </div>
+              <label>Tarikh</label>
+              <input type="date" id="docDate">
+              <div id="dueWrap" hidden>
+                <label>Tarikh Akhir Bayar</label>
+                <input type="date" id="dueDate">
+              </div>
+              <label><input type="checkbox" id="sstEnabled"> SST 8%</label>
+            </div>
+            <div class="card">
+              <h3>Pelanggan</h3>
+              <select id="clientPick"><option value="">— Pilih —</option></select>
+              <label>Nama *</label>
+              <input id="clientName">
+              <label>Perhatian</label>
+              <input id="clientAttn">
+              <label>Alamat</label>
+              <textarea id="clientAddress" rows="2"></textarea>
+              <label>Telefon / E-mel</label>
+              <input id="clientPhone" placeholder="Telefon">
+              <input id="clientEmail" placeholder="E-mel" style="margin-top:0.4rem">
+            </div>
+            <div class="card">
+              <h3>Item *</h3>
+              <div id="itemsList"></div>
+              <button class="btn btn-small" id="btnAddItem">+ Item</button>
+            </div>
+            <div class="card">
+              <h3>Tajuk *</h3>
+              <input id="docSubject">
+              <h3 style="margin-top:1rem">Terma</h3>
+              <div id="termsList"></div>
+            </div>
+          </div>
+          <div class="editor-preview-wrap">
+            <div id="docPreview" class="doc-preview a4"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ARCHIVE -->
+      <section id="view-archive" class="view">
+        <header class="page-header">
+          <h1>Arkib Dokumen</h1>
+          <select id="archiveFilter">
+            <option value="all">Semua</option>
+            <option value="quotation">Sebutharga</option>
+            <option value="invoice">Invois</option>
+          </select>
+        </header>
+        <div class="archive-layout">
+          <div class="card" id="archiveList"></div>
+          <div class="card" id="archiveVersions"><p class="hint">Pilih dokumen untuk lihat versi.</p></div>
+        </div>
+      </section>
+
+      <!-- CLIENTS -->
+      <section id="view-clients" class="view">
+        <header class="page-header">
+          <h1>Pelanggan</h1>
+          <button class="btn btn-primary" id="btnAddClient">+ Pelanggan</button>
+        </header>
+        <div class="card" id="clientsList"></div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section id="view-settings" class="view">
+        <header class="page-header"><h1>Tetapan</h1></header>
+        <div class="card settings-card">
+          <h3>Format Nombor</h3>
+          <select id="numberFormat">
+            <option value="standard">Standard — PSE-INV-2026-0001</option>
+            <option value="classic">Classic — PSE/KOD/YYMM-001</option>
+            <option value="monthly">Monthly — PSE/INV/202602-001</option>
+            <option value="simple">Simple — INV-202602-001</option>
+          </select>
+          <h3>Backup & Pulihkan</h3>
+          <div class="btn-row">
+            <button class="btn btn-primary" id="btnExport">Export Backup JSON</button>
+            <label class="btn btn-secondary">Import Backup<input type="file" id="importFile" accept=".json" hidden></label>
+            <button class="btn btn-danger" id="btnResetCounter">Reset Counter Nombor</button>
+          </div>
+          <p class="hint">Upload backup JSON ke Google Drive folder <strong>PSE-Dokumen/backup/</strong></p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

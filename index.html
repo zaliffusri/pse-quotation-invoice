@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PSE — Sebutharga & Invois</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <div class="brand">
+        <img src="assets/logo.png" alt="Pillar Stride Enterprise" class="brand-logo">
+        <div>
+          <h1>Pillar Stride Enterprise</h1>
+          <p>Sistem Sebutharga & Invois</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button type="button" id="btnConvertInvoice" class="btn btn-secondary" style="display:none">→ Tukar Invois</button>
+        <button type="button" id="btnFinalize" class="btn btn-success">Simpan & Sahkan</button>
+        <button type="button" id="btnNewDoc" class="btn btn-secondary" disabled>Dokumen Baru</button>
+        <button type="button" id="btnPrint" class="btn btn-primary" disabled>Cetak / PDF</button>
+      </div>
+    </header>
+
+    <main class="main-grid">
+      <aside class="form-panel">
+        <section class="form-section workflow-banner">
+          <p id="docStatus" class="status-badge status-draft">Draf</p>
+          <p class="hint workflow-hint">Nombor hanya digunakan selepas <strong>Simpan & Sahkan</strong>. Butang Dokumen Baru hanya aktif selepas dokumen disahkan.</p>
+        </section>
+
+        <section class="form-section">
+          <h2>Jenis Dokumen</h2>
+          <div class="doc-type-toggle">
+            <label class="toggle-option">
+              <input type="radio" name="docType" value="quotation" checked>
+              <span>Sebutharga</span>
+            </label>
+            <label class="toggle-option">
+              <input type="radio" name="docType" value="invoice">
+              <span>Invois</span>
+            </label>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2>Nombor Rujukan</h2>
+          <div class="field-row">
+            <label for="numberFormat">Format Nombor</label>
+            <select id="numberFormat">
+              <option value="standard">Standard — PSE-INV-2026-0001</option>
+              <option value="classic">Classic — PSE/KOD/YYMM-001</option>
+              <option value="monthly">Monthly — PSE/INV/202602-001</option>
+              <option value="simple">Simple — INV-202602-001</option>
+            </select>
+          </div>
+          <div class="field-row">
+            <label for="docNumber">No. Dokumen</label>
+            <input type="text" id="docNumber" readonly>
+          </div>
+          <div class="field-row">
+            <label for="clientCode">Kod Pelanggan</label>
+            <input type="text" id="clientCode" placeholder="cth: KOSISWA" maxlength="12">
+          </div>
+          <div class="field-row" id="refQuoRow" style="display:none">
+            <label for="refQuotation">Ruj. Sebutharga</label>
+            <input type="text" id="refQuotation" placeholder="cth: PSE-QUO-2026-0003">
+          </div>
+          <p class="hint" id="numberHint"></p>
+        </section>
+
+        <section class="form-section">
+          <h2>Tarikh</h2>
+          <div class="field-row">
+            <label for="docDate">Tarikh</label>
+            <input type="date" id="docDate">
+          </div>
+          <div class="field-row" id="dueDateRow">
+            <label for="dueDate">Tarikh Akhir Bayar</label>
+            <input type="date" id="dueDate">
+          </div>
+          <div class="field-row">
+            <label class="checkbox-label">
+              <input type="checkbox" id="sstEnabled">
+              <span>Tambah SST (8%)</span>
+            </label>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2>Template Pelanggan</h2>
+          <div class="field-row">
+            <select id="clientTemplate">
+              <option value="">— Pilih pelanggan —</option>
+            </select>
+          </div>
+          <div class="template-actions">
+            <button type="button" id="btnSaveClient" class="btn btn-small">Simpan Pelanggan</button>
+            <button type="button" id="btnDeleteClient" class="btn btn-ghost btn-small">Padam</button>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2>Maklumat Pelanggan</h2>
+          <div class="field-row">
+            <label for="clientName">Nama / Organisasi *</label>
+            <input type="text" id="clientName" placeholder="cth: KOSISWA UTHM">
+          </div>
+          <div class="field-row">
+            <label for="clientAttn">Perhatian</label>
+            <input type="text" id="clientAttn" placeholder="cth: Pn. Mimi">
+          </div>
+          <div class="field-row">
+            <label for="clientAddress">Alamat</label>
+            <textarea id="clientAddress" rows="3"></textarea>
+          </div>
+          <div class="field-row">
+            <label for="clientPhone">Telefon</label>
+            <input type="text" id="clientPhone">
+          </div>
+          <div class="field-row">
+            <label for="clientEmail">E-mel</label>
+            <input type="email" id="clientEmail">
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2>Tajuk / Subjek *</h2>
+          <div class="field-row">
+            <input type="text" id="docSubject" value="SEBUTHARGA PEMBEKALAN PAKEJ LENGKAP MESIN SLUSHY">
+          </div>
+        </section>
+
+        <section class="form-section">
+          <div class="section-header">
+            <h2>Item / Perkhidmatan *</h2>
+            <button type="button" id="btnAddItem" class="btn btn-small">+ Tambah</button>
+          </div>
+          <div id="itemsEditor" class="items-editor"></div>
+        </section>
+
+        <section class="form-section">
+          <h2>Terma & Syarat</h2>
+          <div id="termsEditor"></div>
+        </section>
+
+        <section class="form-section">
+          <h2>Arkib Dokumen</h2>
+          <div class="field-row">
+            <select id="libraryFilter">
+              <option value="all">Semua</option>
+              <option value="quotation">Sebutharga sahaja</option>
+              <option value="invoice">Invois sahaja</option>
+            </select>
+          </div>
+          <div id="docLibrary" class="doc-library"></div>
+        </section>
+
+        <section class="form-section">
+          <h2>Versi Dokumen</h2>
+          <div id="versionPanel" class="version-panel">
+            <p class="hint">Setiap no. rujukan = satu folder. Edit & sahkan = versi baru.</p>
+          </div>
+        </section>
+
+        <section class="form-section dashboard-section">
+          <h2>Dashboard & Pelan Sistem</h2>
+          <div id="systemDashboard"></div>
+        </section>
+
+        <section class="form-section">
+          <h2>Tetapan & Backup</h2>
+          <p class="hint">Export ZIP → upload ke Google Drive folder <strong>PSE-Dokumen/</strong></p>
+          <div class="field-row">
+            <label class="checkbox-label">
+              <input type="checkbox" id="autoPdfToggle" checked>
+              <span>Auto cetak PDF selepas sahkan</span>
+            </label>
+          </div>
+          <div class="template-actions">
+            <button type="button" id="btnExportZipAll" class="btn btn-small">Export Semua (ZIP)</button>
+            <button type="button" id="btnExportZipFolder" class="btn btn-small">Export Folder Semasa</button>
+            <button type="button" id="btnExportBackup" class="btn btn-ghost btn-small">Export JSON</button>
+            <label class="btn btn-ghost btn-small import-label">
+              Import JSON
+              <input type="file" id="importBackupFile" accept=".json" hidden>
+            </label>
+            <button type="button" id="btnResetCounters" class="btn btn-ghost btn-small btn-danger-text">Reset Counter</button>
+            <a href="PLAN.md" target="_blank" class="btn btn-ghost btn-small plan-link">📋 Pelan Jangka Panjang</a>
+          </div>
+        </section>
+      </aside>
+
+      <div class="preview-panel">
+        <div id="documentPreview" class="document a4"></div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/sync.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

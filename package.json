@@ -1,0 +1,26 @@
+{
+  "name": "pse-quotation-invoice",
+  "version": "3.1.0",
+  "description": "Pillar Stride Enterprise — Vercel + Supabase",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "vercel dev",
+    "deploy": "vercel --prod",
+    "setup:verify": "node scripts/verify-supabase.js",
+    "setup:migrate": "node scripts/migrate-local.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.8",
+    "cookie": "^0.7.2",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "vercel": "^41.6.2"
+  }
+}

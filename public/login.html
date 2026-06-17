@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log Masuk — PSE System</title>
+  <link rel="stylesheet" href="/css/system.css">
+</head>
+<body class="login-page">
+  <div class="login-card">
+    <img src="/assets/logo.png" alt="PSE" class="login-logo" onerror="this.style.display='none'">
+    <h1>Pillar Stride Enterprise</h1>
+    <p class="login-sub">Sistem Sebutharga & Invois</p>
+    <form id="loginForm">
+      <label>Username</label>
+      <input type="text" id="username" value="admin" required autocomplete="username">
+      <label>Kata Laluan</label>
+      <input type="password" id="password" value="pse2026" required autocomplete="current-password">
+      <p id="loginError" class="error-msg" hidden></p>
+      <button type="submit" class="btn btn-primary btn-block">Log Masuk</button>
+    </form>
+    <p class="login-hint">Default: admin / pse2026</p>
+  </div>
+  <script>
+    fetch('/api/auth/check', { credentials: 'include' }).then(r => r.json()).then(d => {
+      if (d.authenticated) location.href = '/';
+    });
+    document.getElementById('loginForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const err = document.getElementById('loginError');
+      err.hidden = true;
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: document.getElementById('username').value,
+          password: document.getElementById('password').value
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        err.textContent = data.error || 'Log masuk gagal.';
+        err.hidden = false;
+        return;
+      }
+      location.href = '/';
+    });
+  </script>
+</body>
+</html>
