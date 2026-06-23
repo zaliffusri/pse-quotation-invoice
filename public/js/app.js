@@ -18,6 +18,14 @@ const TERMS_INV = [
   'Invois sah tanpa tandatangan (sistem digital).'
 ];
 
+function printDoc() {
+  const oldTitle = document.title;
+  document.title = ' ';
+  const restore = () => { document.title = oldTitle; window.removeEventListener('afterprint', restore); };
+  window.addEventListener('afterprint', restore);
+  window.print();
+}
+
 const App = {
   company: null,
   clients: [],
@@ -96,9 +104,10 @@ const App = {
     $('sstEnabled').onchange = () => this.renderPreview();
     $('clientPick').onchange = () => this.applyClient($('clientPick').value);
     $('btnAddItem').onclick = () => { this.state.items.push({ desc: '', price: 0, qty: 1 }); this.renderItems(); this.renderPreview(); };
+    $('btnAddTerm').onclick = () => { this.state.terms.push(''); this.renderTerms(); this.renderPreview(); };
     $('btnFinalize').onclick = () => this.finalize();
     $('btnNewDoc').onclick = () => this.resetEditor();
-    $('btnPrint').onclick = () => window.print();
+    $('btnPrint').onclick = () => printDoc();
     $('btnConvertInv').onclick = () => this.convertInvoice();
     $('archiveFilter').onchange = () => this.loadArchive();
   },
@@ -219,7 +228,7 @@ const App = {
       this.updateButtons();
       this.renderPreview();
       alert(`✅ Disahkan!\n\n${res.docNumber} — v${res.version}\nJumlah: RM ${fmt(res.total)}\n\nFolder: PSE-Dokumen/${res.drivePath}/`);
-      if (confirm('Cetak PDF sekarang?')) window.print();
+      if (confirm('Cetak PDF sekarang?')) printDoc();
     } catch (e) { alert(e.message); }
   },
 
@@ -282,10 +291,27 @@ const App = {
   },
 
   renderTerms() {
-    $('termsList').innerHTML = this.state.terms.map((t, i) =>
-      `<textarea data-ti="${i}" rows="2">${esc(t)}</textarea>`).join('');
+    $('termsList').innerHTML = this.state.terms.map((t, i) => `
+      <div class="term-row">
+        <textarea data-ti="${i}" rows="2" placeholder="Terma ${i + 1}">${esc(t)}</textarea>
+        <button type="button" data-rm-term="${i}" title="Padam terma">×</button>
+      </div>`).join('');
     $('termsList').querySelectorAll('textarea').forEach(ta => {
-      ta.oninput = () => { this.state.terms[+ta.dataset.ti] = ta.value; this.renderPreview(); };
+      ta.oninput = () => {
+        this.state.terms[+ta.dataset.ti] = ta.value;
+        this.state.finalized = false;
+        this.updateButtons();
+        this.renderPreview();
+      };
+    });
+    $('termsList').querySelectorAll('[data-rm-term]').forEach(btn => {
+      btn.onclick = () => {
+        this.state.terms.splice(+btn.dataset.rmTerm, 1);
+        this.state.finalized = false;
+        this.updateButtons();
+        this.renderTerms();
+        this.renderPreview();
+      };
     });
   },
 
@@ -294,6 +320,8 @@ const App = {
     const L = s.docType === 'quotation';
     const num = this.state.finalized || this.state.lockedNumber ? (this.state.lockedNumber || s.docNumber) : ($('docNumber').dataset.peek || s.docNumber);
     const co = this.company || {};
+    const clientContact = [s.clientPhone, s.clientEmail].filter(Boolean).join(' | ');
+    const clientNameLine = [s.clientName, s.clientAttn ? `(Attn: ${s.clientAttn})` : ''].filter(Boolean).join(' ');
     const rows = s.items.map((it, i) => `<tr><td>${i+1}</td><td>${esc(it.desc)}</td><td class="r">${fmt(it.price)}</td><td class="c">${it.qty}</td><td class="r">${fmt(it.price*it.qty)}</td></tr>`).join('');
     const totals = s.sstEnabled
       ? `<tr><td colspan="4" class="r"><b>Subjumlah</b></td><td class="r">${fmt(s.subtotal)}</td></tr>
@@ -314,11 +342,17 @@ const App = {
           ${!L && s.dueDate ? `<div><b>Akhir Bayar:</b> ${fd(s.dueDate)}</div>` : ''}
         </div>
       </div>
+      <div class="pv-client">
+        <b>Kepada:</b><br>
+        ${esc(clientNameLine || '-') }<br>
+        ${esc(s.clientAddress || '-').replace(/\n/g, '<br>')}
+        ${clientContact ? `<br>${esc(clientContact)}` : ''}
+      </div>
       <p>Tuan/Puan,</p>
       <p class="pv-subject">${esc(s.docSubject)}</p>
       <table class="pv-table"><thead><tr><th>No</th><th>Item</th><th>Harga</th><th>Qty</th><th>Jumlah</th></tr></thead>
       <tbody>${rows}</tbody><tfoot>${totals}</tfoot></table>
-      <div class="pv-terms"><b>Terma & Syarat</b><ol>${s.terms.map(t=>`<li>${esc(t)}</li>`).join('')}</ol></div>
+      <div class="pv-terms"><b>Terma & Syarat</b><ol>${s.terms.filter(t => t?.trim()).map(t=>`<li>${esc(t)}</li>`).join('')}</ol></div>
       <div class="pv-bank"><b>Maklumat Pembayaran</b><br>
         ${co.bank?.payee} | ${co.bank?.bankName} | ${co.bank?.accountNo}<br>
         <em>Rujukan: ${esc(num)}</em></div>`;

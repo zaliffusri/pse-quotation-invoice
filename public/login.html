@@ -23,7 +23,7 @@
   </div>
   <script>
     fetch('/api/auth/check', { credentials: 'include' }).then(r => r.json()).then(d => {
-      if (d.authenticated) location.href = '/';
+      if (d.authenticated) location.href = '/app.html';
     });
     document.getElementById('loginForm').addEventListener('submit', async e => {
       e.preventDefault();
@@ -44,7 +44,7 @@
         err.hidden = false;
         return;
       }
-      location.href = '/';
+      location.href = '/app.html';
     });
   </script>
 </body>
