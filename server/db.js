@@ -61,6 +61,27 @@ function logActivity(action, docNumber = null, meta = null) {
     });
   }
   if (!getSetting('numberFormat')) setSetting('numberFormat', 'standard');
+  if (!getSetting('products')) {
+    setSetting('products', [
+      { id: 'ps5-basic', name: 'PS5 Basic Package (1 hari)', price: 50, category: 'rental' },
+      { id: 'controller', name: 'Tambahan Controller', price: 15, category: 'addon' },
+      { id: 'hdmi', name: 'Tambahan HDMI Cable', price: 10, category: 'addon' }
+    ]);
+  }
+  if (!getSetting('units')) {
+    setSetting('units', [
+      { id: 'ps5-1', name: 'PS5 Unit #1', active: true },
+      { id: 'ps5-2', name: 'PS5 Unit #2', active: true },
+      { id: 'ps5-3', name: 'PS5 Unit #3', active: true }
+    ]);
+  }
+  if (!getSetting('promos')) {
+    setSetting('promos', [
+      { id: 'promo-wknd', name: 'Promo Weekend -10%', type: 'percent', value: 10 },
+      { id: 'promo-member', name: 'Member -RM5', type: 'fixed', value: 5 },
+      { id: 'promo-bundle', name: 'Bundle 3 Hari -RM20', type: 'fixed', value: 20 }
+    ]);
+  }
   if (!readStore('clients', []).length) {
     writeStore('clients', [{
       id: 'kosiswa', code: 'KOSISWA', name: 'KOSISWA UTHM',

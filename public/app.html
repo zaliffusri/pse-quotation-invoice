@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PSE — Sebutharga & Invois</title>
+  <title>PSE — Sistem Perniagaan</title>
   <link rel="stylesheet" href="/css/system.css">
 </head>
 <body>
@@ -18,6 +18,9 @@
       </div>
       <nav class="sidebar-nav">
         <button class="nav-btn active" data-view="dashboard">📊 Dashboard</button>
+        <button class="nav-btn nav-highlight" data-view="cashier">🎮 Kaunter Sewa</button>
+        <button class="nav-btn" data-view="rentals">📦 Sewa Aktif</button>
+        <button class="nav-btn" data-view="reports">📈 Laporan</button>
         <button class="nav-btn" data-view="editor">📝 Dokumen Baru</button>
         <button class="nav-btn" data-view="archive">📁 Arkib Dokumen</button>
         <button class="nav-btn" data-view="clients">👥 Pelanggan</button>
@@ -31,7 +34,8 @@
       <section id="view-dashboard" class="view active">
         <header class="page-header">
           <h1>Dashboard</h1>
-          <button class="btn btn-primary" onclick="App.goEditor()">+ Dokumen Baru</button>
+          <button class="btn btn-primary" onclick="App.goCashier()">🎮 Kaunter Sewa</button>
+          <button class="btn btn-secondary" onclick="App.goEditor()">+ Dokumen Baru</button>
         </header>
         <div class="stats-grid" id="statsGrid"></div>
         <div class="two-col">
@@ -43,6 +47,142 @@
             <h3>Log Aktiviti</h3>
             <div id="activityLog"></div>
           </div>
+        </div>
+      </section>
+
+      <!-- CASHIER -->
+      <section id="view-cashier" class="view">
+        <header class="page-header">
+          <h1>Kaunter Sewa PS5</h1>
+          <div class="header-btns">
+            <span id="cashierStatusBadge" class="badge badge-draft">DRAF</span>
+            <button class="btn btn-secondary" id="btnCashierClear">Kosongkan</button>
+            <button class="btn btn-secondary" id="btnCashierInvoice">→ Invois</button>
+            <button class="btn btn-success btn-lg" id="btnCashierPay">Bayar & Cetak Resit</button>
+            <button class="btn btn-secondary" id="btnCashierWhatsApp" disabled>WhatsApp Resit</button>
+            <button class="btn btn-primary" id="btnCashierPrint" disabled>Cetak Semula</button>
+          </div>
+        </header>
+        <div class="cashier-grid">
+          <div class="cashier-panel">
+            <div class="card">
+              <h3>Pakej & Tambahan</h3>
+              <div id="productButtons" class="product-grid"></div>
+              <div id="promoPresetButtons" class="promo-preset-grid"></div>
+            </div>
+            <div class="card">
+              <h3>Penyewa & Unit</h3>
+              <label>Nama Penyewa *</label>
+              <input id="cashierName" list="customerSuggestions" placeholder="Contoh: Ahmad" autofocus autocomplete="off">
+              <datalist id="customerSuggestions"></datalist>
+              <label>Telefon</label>
+              <input id="cashierPhone" placeholder="012-3456789">
+              <label>Unit PS5 *</label>
+              <select id="cashierUnit"><option value="">— Pilih unit —</option></select>
+              <label>Kaedah Bayaran</label>
+              <div class="payment-toggle">
+                <label><input type="radio" name="paymentMethod" value="cash" checked> Tunai</label>
+                <label><input type="radio" name="paymentMethod" value="transfer"> Transfer</label>
+                <label><input type="radio" name="paymentMethod" value="duitnow"> DuitNow QR</label>
+              </div>
+              <div class="two-field">
+                <div>
+                  <label>Tarikh Mula Sewa</label>
+                  <input type="date" id="cashierStart">
+                </div>
+                <div>
+                  <label>Tarikh Pulang</label>
+                  <input type="date" id="cashierEnd">
+                </div>
+              </div>
+              <label>No. Resit (anggaran)</label>
+              <input id="cashierReceiptNo" readonly>
+            </div>
+          </div>
+          <div class="cashier-panel">
+            <div class="card cart-card">
+              <h3>Cart Semasa</h3>
+              <div id="cashierCart" class="cart-list"></div>
+              <div id="cashierAddItem" class="cart-add-form">
+                <p class="cart-add-label">+ Item Manual</p>
+                <div class="cart-add-row">
+                  <input id="cashierItemDesc" placeholder="Nama item">
+                  <input type="number" id="cashierItemPrice" placeholder="Harga" min="0" step="0.01">
+                  <input type="number" id="cashierItemQty" placeholder="Qty" min="1" value="1">
+                  <button type="button" class="btn btn-small btn-primary" id="btnCashierAddItem">Tambah</button>
+                </div>
+              </div>
+              <div id="cashierDiscount" class="cart-discount-form">
+                <p class="cart-add-label">Promo / Diskaun</p>
+                <div class="discount-row">
+                  <select id="cashierDiscountType">
+                    <option value="none">Tiada diskaun</option>
+                    <option value="fixed">RM (jumlah)</option>
+                    <option value="percent">% (peratus)</option>
+                  </select>
+                  <input type="number" id="cashierDiscountValue" min="0" step="0.01" placeholder="0" disabled>
+                  <input id="cashierDiscountLabel" placeholder="Nama promo (pilihan)">
+                </div>
+              </div>
+              <div id="cashierTotals" class="cart-totals">
+                <div class="cart-total-row"><span>Subjumlah</span><span id="cashierSubtotal">RM 0.00</span></div>
+                <div class="cart-total-row cart-discount-line" id="cashierDiscountRow" hidden>
+                  <span id="cashierDiscountLabelText">Diskaun</span>
+                  <span id="cashierDiscountAmount">-RM 0.00</span>
+                </div>
+                <div class="cart-total-row cart-grand-total">
+                  <span>Jumlah</span>
+                  <strong id="cashierTotal">RM 0.00</strong>
+                </div>
+              </div>
+            </div>
+            <div class="card cashier-preview-card">
+              <h3>Pratonton Resit</h3>
+              <div id="cashierPreview" class="doc-preview receipt-preview"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RENTALS -->
+      <section id="view-rentals" class="view">
+        <header class="page-header">
+          <h1>Sewa Aktif</h1>
+          <select id="rentalFilter">
+            <option value="all">Semua</option>
+            <option value="rented" selected>Disewa</option>
+            <option value="overdue">Lewat Pulang</option>
+            <option value="returned">Sudah Pulang</option>
+          </select>
+        </header>
+        <div class="stats-grid" id="rentalStats"></div>
+        <div class="card" id="rentalsList"></div>
+      </section>
+
+      <!-- REPORTS -->
+      <section id="view-reports" class="view">
+        <header class="page-header">
+          <h1>Laporan Harian</h1>
+          <div class="header-btns">
+            <input type="date" id="reportDate">
+            <button class="btn btn-secondary" id="btnReportRefresh">Muat Semula</button>
+            <button class="btn btn-primary" id="btnReportExport">Export CSV</button>
+          </div>
+        </header>
+        <div class="stats-grid" id="reportStats"></div>
+        <div class="two-col">
+          <div class="card">
+            <h3>Kaedah Bayaran</h3>
+            <div id="reportPayments"></div>
+          </div>
+          <div class="card">
+            <h3>Item Paling Laris</h3>
+            <div id="reportTopItems"></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Senarai Transaksi</h3>
+          <div id="reportTransactions"></div>
         </div>
       </section>
 
@@ -120,6 +260,7 @@
           <h1>Arkib Dokumen</h1>
           <select id="archiveFilter">
             <option value="all">Semua</option>
+            <option value="receipt">Resit</option>
             <option value="quotation">Sebutharga</option>
             <option value="invoice">Invois</option>
           </select>
@@ -157,6 +298,38 @@
             <button class="btn btn-danger" id="btnResetCounter">Reset Counter Nombor</button>
           </div>
           <p class="hint">Upload backup JSON ke Google Drive folder <strong>PSE-Dokumen/backup/</strong></p>
+          <h3 style="margin-top:1.5rem">Katalog Kaunter (PS5 & lain-lain)</h3>
+          <p class="hint">Butang pantas pada skrin Kaunter Sewa. Harga boleh ubah mengikut keperluan.</p>
+          <div id="productsEditor"></div>
+          <div class="btn-row">
+            <button class="btn btn-secondary" id="btnAddProduct">+ Produk</button>
+            <button class="btn btn-primary" id="btnSaveProducts">Simpan Katalog</button>
+          </div>
+
+          <h3 style="margin-top:1.5rem">Unit PS5</h3>
+          <p class="hint">Senarai unit untuk assign semasa sewa.</p>
+          <div id="unitsEditor"></div>
+          <div class="btn-row">
+            <button class="btn btn-secondary" id="btnAddUnit">+ Unit</button>
+            <button class="btn btn-primary" id="btnSaveUnits">Simpan Unit</button>
+          </div>
+
+          <h3 style="margin-top:1.5rem">Promo Preset</h3>
+          <p class="hint">Butang diskaun pantas di kaunter.</p>
+          <div id="promosEditor"></div>
+          <div class="btn-row">
+            <button class="btn btn-secondary" id="btnAddPromo">+ Promo</button>
+            <button class="btn btn-primary" id="btnSavePromos">Simpan Promo</button>
+          </div>
+
+          <h3 style="margin-top:1.5rem">Tukar Kata Laluan</h3>
+          <label>Kata Laluan Semasa</label>
+          <input type="password" id="currentPassword" autocomplete="current-password">
+          <label>Kata Laluan Baru</label>
+          <input type="password" id="newPassword" autocomplete="new-password">
+          <label>Sahkan Kata Laluan Baru</label>
+          <input type="password" id="confirmPassword" autocomplete="new-password">
+          <button class="btn btn-primary" id="btnChangePassword" style="margin-top:0.5rem">Tukar Kata Laluan</button>
         </div>
       </section>
     </main>

@@ -4,21 +4,25 @@ const FORMATS = {
   standard: {
     quo: (p, code, d, seq) => `${p}-QUO-${d.yyyy}-${pad(seq, 4)}`,
     inv: (p, code, d, seq) => `${p}-INV-${d.yyyy}-${pad(seq, 4)}`,
+    rcp: (p, code, d, seq) => `${p}-RCP-${d.yyyy}-${pad(seq, 4)}`,
     counterKey: (type, d) => `${type}_std_${d.yyyy}`
   },
   classic: {
     quo: (p, code, d, seq) => `${p}/${code}/${d.yymm}-${pad(seq, 3)}`,
     inv: (p, code, d, seq) => `${p}/INV/${d.yymm}-${pad(seq, 3)}`,
-    counterKey: (type, d, code) => type === 'quotation' ? `quo_cls_${code}_${d.yymm}` : `inv_cls_${d.yymm}`
+    rcp: (p, code, d, seq) => `${p}/RCP/${d.yymm}-${pad(seq, 3)}`,
+    counterKey: (type, d, code) => type === 'quotation' ? `quo_cls_${code}_${d.yymm}` : `${type === 'receipt' ? 'rcp' : 'inv'}_cls_${d.yymm}`
   },
   monthly: {
     quo: (p, code, d, seq) => `${p}/QUO/${d.yyyymm}-${pad(seq, 3)}`,
     inv: (p, code, d, seq) => `${p}/INV/${d.yyyymm}-${pad(seq, 3)}`,
+    rcp: (p, code, d, seq) => `${p}/RCP/${d.yyyymm}-${pad(seq, 3)}`,
     counterKey: (type, d) => `${type}_mth_${d.yyyymm}`
   },
   simple: {
     quo: (p, code, d, seq) => `QUO-${d.yyyymm}-${pad(seq, 3)}`,
     inv: (p, code, d, seq) => `INV-${d.yyyymm}-${pad(seq, 3)}`,
+    rcp: (p, code, d, seq) => `RCP-${d.yyyymm}-${pad(seq, 3)}`,
     counterKey: (type, d) => `${type}_simp_${d.yyyymm}`
   }
 };
@@ -62,7 +66,7 @@ function buildNumber(format, type, dateStr, clientCode, seq, prefix = 'PSE') {
   const fmt = FORMATS[format] || FORMATS.standard;
   const d = getDateParts(dateStr);
   const code = sanitizeCode(clientCode);
-  const builder = type === 'quotation' ? fmt.quo : fmt.inv;
+  const builder = type === 'quotation' ? fmt.quo : type === 'receipt' ? fmt.rcp : fmt.inv;
   return builder(prefix, code, d, seq);
 }
 
