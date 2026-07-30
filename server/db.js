@@ -63,10 +63,37 @@ function logActivity(action, docNumber = null, meta = null) {
   if (!getSetting('numberFormat')) setSetting('numberFormat', 'standard');
   if (!getSetting('products')) {
     setSetting('products', [
-      { id: 'ps5-basic', name: 'PS5 Basic Package (1 hari)', price: 50, category: 'rental' },
+      { id: 'ps5-set', name: '1 Set PS5', price: 50, category: 'rental' },
+      { id: 'minyak-sahabat', name: 'Minyak ke Sekolah Sahabat', price: 30, category: 'transport' },
+      { id: 'jaga-sehari', name: 'Setup & Standby Jaga (1 hari)', price: 150, category: 'service' },
       { id: 'controller', name: 'Tambahan Controller', price: 15, category: 'addon' },
       { id: 'hdmi', name: 'Tambahan HDMI Cable', price: 10, category: 'addon' }
     ]);
+  } else {
+    const products = getSetting('products', []);
+    const memberRates = [
+      { id: 'ps5-set', name: '1 Set PS5', price: 50, category: 'rental' },
+      { id: 'minyak-sahabat', name: 'Minyak ke Sekolah Sahabat', price: 30, category: 'transport' },
+      { id: 'jaga-sehari', name: 'Setup & Standby Jaga (1 hari)', price: 150, category: 'service' }
+    ];
+    let changed = false;
+    for (const rate of memberRates) {
+      const idx = products.findIndex(p => p.id === rate.id);
+      if (idx === -1) {
+        products.push(rate);
+        changed = true;
+      } else if (
+        products[idx].name !== rate.name ||
+        Number(products[idx].price) !== rate.price ||
+        products[idx].category !== rate.category
+      ) {
+        products[idx] = { ...products[idx], ...rate };
+        changed = true;
+      }
+    }
+    const withoutOld = products.filter(p => p.id !== 'ps5-basic');
+    if (withoutOld.length !== products.length) changed = true;
+    if (changed) setSetting('products', withoutOld);
   }
   if (!getSetting('units')) {
     setSetting('units', [
