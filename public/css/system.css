@@ -24,6 +24,30 @@ body { font-family: "Segoe UI", Arial, sans-serif; background: var(--bg); color:
 .login-card input { width: 100%; padding: .55rem; border: 1px solid var(--border); border-radius: 6px; }
 .error-msg { color: var(--danger); font-size: .82rem; margin: .5rem 0; }
 .login-hint { font-size: .72rem; color: var(--muted); margin-top: 1rem; }
+.login-pwa-hint { margin-top: .5rem; line-height: 1.35; }
+
+/* Offline PWA banner */
+.offline-banner {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: .55rem 1rem;
+  text-align: center;
+  font-size: .82rem;
+  font-weight: 600;
+}
+.offline-banner--off {
+  background: #92400e;
+  color: #fffbeb;
+}
+.offline-banner--sync {
+  background: #1e3a5f;
+  color: #e0f2fe;
+}
+
+@media print {
+  .offline-banner { display: none !important; }
+}
 
 /* Layout */
 .layout { display: flex; min-height: 100vh; }

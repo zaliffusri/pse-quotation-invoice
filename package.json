@@ -1,6 +1,6 @@
 {
   "name": "pse-quotation-invoice",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "Pillar Stride Enterprise — Vercel + Supabase",
   "scripts": {
     "start": "node server/index.js",
