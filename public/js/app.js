@@ -106,11 +106,20 @@ const App = {
   },
 
   async init() {
-    const auth = await fetch('/api/auth/check', { credentials: 'include' }).then(r => r.json());
-    if (!auth.authenticated) return location.href = '/login.html';
+    Offline.installBanner();
 
-    document.getElementById('userName').textContent = auth.user.name;
+    let auth;
+    try {
+      auth = await API.get('/auth/check');
+    } catch {
+      auth = { authenticated: false };
+    }
+    if (!auth.authenticated) return location.href = '/login.html';
+    if (auth.user) Offline.setSession(auth.user);
+
+    document.getElementById('userName').textContent = auth.user?.name || 'PSE';
     const me = await API.get('/me');
+    Offline.cacheMe(me);
     this.company = me.company;
     this.products = me.products || [];
     this.units = me.units || [];
@@ -124,7 +133,8 @@ const App = {
     this.bindReports();
     this.bindSettings();
     document.getElementById('btnLogout').onclick = async () => {
-      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+      try { await API.post('/auth/logout', {}); } catch { /* ignore */ }
+      Offline.clearSession();
       location.href = '/login.html';
     };
 
@@ -133,6 +143,10 @@ const App = {
     this.checkBackupReminder();
     this.goEditor(true);
     await this.loadDashboard();
+
+    if (Offline.isOnline()) {
+      Offline.flushQueue().then(() => Offline.hydrateFromNetwork()).catch(() => {});
+    }
   },
 
   checkBackupReminder() {

@@ -28,7 +28,22 @@ Panduan manual: **[DEPLOY-VERCEL.md](DEPLOY-VERCEL.md)**
 
 ---
 
-## 💻 Guna Tempatan (Offline)
+## 📱 iPhone / Offline (PWA)
+
+Selepas deploy online:
+
+1. Buka URL Vercel dalam **Safari** (bukan Chrome)
+2. Log masuk sekali semasa ada internet (data disimpan pada telefon)
+3. Kongsi → **Tambah ke Skrin Utama**
+4. Buka ikon PSE dari skrin utama — boleh guna **tanpa internet**
+
+Perubahan offline akan sync automatik bila telefon ada internet semula.
+
+> Kali pertama mesti online. Reset Safari / padam data laman = perlu log masuk online lagi.
+
+---
+
+## 💻 Guna Tempatan (Offline PC)
 
 ```bash
 npm install
@@ -50,6 +65,7 @@ Atau double-click `start.bat`
 - **Pelanggan** — simpan template pelanggan
 - **Backup** — export/import JSON
 - **Cetak PDF** — Save as PDF dari browser
+- **PWA iPhone** — tambah ke skrin utama, guna offline
 
 ---
 
@@ -58,7 +74,10 @@ Atau double-click `start.bat`
 ```
 ├── api/              ← Vercel serverless API
 ├── lib/              ← Supabase, auth, numbering
-├── public/           ← Website (login, app)
+├── public/           ← Website (login, app, PWA)
+│   ├── sw.js         ← Service worker (offline shell)
+│   ├── manifest.webmanifest
+│   └── js/offline.js ← Cache & sync offline
 ├── supabase/         ← Database schema SQL
 ├── scripts/          ← Setup & migration scripts
 ├── SETUP-ONLINE.bat  ← Setup cloud (1-click)
@@ -74,4 +93,4 @@ Double-click `DEPLOY-ONLINE.bat` (selepas setup pertama)
 
 ---
 
-*Pillar Stride Enterprise — v3.1*
+*Pillar Stride Enterprise — v3.2*
