@@ -46,19 +46,17 @@ const NUMBER_FORMATS = {
 };
 
 const DEFAULT_ITEMS = [
-  { desc: 'Pakej Lengkap Mesin Slushy', price: 3200, qty: 1 },
-  { desc: 'Pemegang Cawan', price: 30, qty: 1 },
-  { desc: 'Sokongan Teknikal (6 Bulan)', price: 0, qty: 1 }
+  { desc: '1 Set PS5', price: 50, qty: 2 },
+  { desc: 'Minyak ke Sekolah Sahabat', price: 30, qty: 1 },
+  { desc: 'Setup & Standby Jaga (1 hari)', price: 150, qty: 1 }
 ];
 
 const DEFAULT_TERMS_QUO = [
-  'Hak Milik Sementara: Mesin ini kekal menjadi Hak Milik Pembekal sehingga pembayaran penuh diselesaikan.',
-  'Hak Milik Kekal: Hak milik hanya akan berpindah kepada pelanggan setelah bayaran akhir diterima.',
-  'Bayaran perlulah dalam tempoh 7 hari pada awal setiap bulan.',
-  'Tempoh maksimum bayaran bulanan hanya 12 bulan.',
-  'Kerosakan: Sebarang kerosakan mesin akibat kecuaian pengguna semasa tempoh pembayaran adalah tanggungjawab pelanggan sepenuhnya.',
-  'Kegagalan Bayaran: Jika pembayaran tertunggak melebihi 30 hari, Pembekal berhak mengambil semula (repossess) mesin tersebut tanpa sebarang pemulangan wang.',
-  'Bagi pembayaran, sila tulis cek atas nama Pillar Stride Enterprise dan depositkan ke akaun Maybank 551584078633.'
+  'Kadar member: 1 Set PS5 RM50 | Minyak ke Sekolah Sahabat RM30 | Setup & Standby Jaga RM150/hari.',
+  'Unit PS5 kekal milik Pillar Stride Enterprise sepanjang tempoh sewa/setup.',
+  'Member bertanggungjawab menjaga peralatan sepanjang shift standby.',
+  'Kerosakan akibat kecuaian ditanggung oleh pihak yang bertugas.',
+  'Bayaran ke Maybank 551584078633 atas nama Pillar Stride Enterprise.'
 ];
 
 const DEFAULT_TERMS_INV = [
@@ -78,7 +76,7 @@ const DOC_LABELS = {
     termsTitle: 'Terma & Syarat', bankingTitle: 'Maklumat Pembayaran',
     payee: 'Nama Penerima', bank: 'Bank', account: 'No. Akaun', paymentRef: 'Rujukan bayaran',
     attn: 'Perhatian', tel: 'Tel', email: 'E-mel',
-    defaultSubject: 'SEBUTHARGA PEMBEKALAN PAKEJ LENGKAP MESIN SLUSHY'
+    defaultSubject: 'SEBUTHARGA SETUP PS5, MINYAK & STANDBY JAGA'
   },
   invoice: {
     type: 'INVOIS', refLabel: 'No. Invois', dateLabel: 'Tarikh', dueLabel: 'Tarikh Akhir Bayar',
@@ -89,7 +87,7 @@ const DOC_LABELS = {
     termsTitle: 'Terma & Syarat', bankingTitle: 'Maklumat Pembayaran',
     payee: 'Nama Penerima', bank: 'Bank', account: 'No. Akaun', paymentRef: 'Rujukan bayaran',
     attn: 'Perhatian', tel: 'Tel', email: 'E-mel',
-    defaultSubject: 'INVOIS PEMBEKALAN PAKEJ LENGKAP MESIN SLUSHY'
+    defaultSubject: 'INVOIS SETUP PS5, MINYAK & STANDBY JAGA'
   }
 };
 

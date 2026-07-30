@@ -1,14 +1,17 @@
 const DEFAULT_ITEMS = [
-  { desc: 'Pakej Lengkap Mesin Slushy', price: 3200, qty: 1 },
-  { desc: 'Pemegang Cawan', price: 30, qty: 1 },
-  { desc: 'Sokongan Teknikal (6 Bulan)', price: 0, qty: 1 }
+  { desc: '1 Set PS5', price: 50, qty: 2 },
+  { desc: 'Minyak ke Sekolah Sahabat', price: 30, qty: 1 },
+  { desc: 'Setup & Standby Jaga (1 hari)', price: 150, qty: 1 }
 ];
 
+const SUBJECT_QUO = 'SEBUTHARGA SETUP PS5, MINYAK & STANDBY JAGA';
+const SUBJECT_INV = 'INVOIS SETUP PS5, MINYAK & STANDBY JAGA';
+
 const TERMS_QUO = [
-  'Hak Milik Sementara: Mesin kekal Hak Milik Pembekal sehingga pembayaran penuh.',
-  'Bayaran dalam tempoh 7 hari pada awal setiap bulan.',
-  'Tempoh maksimum bayaran bulanan 12 bulan.',
-  'Kegagalan bayaran melebihi 30 hari — pembekal berhak ambil semula mesin.',
+  'Kadar member: 1 Set PS5 RM50 | Minyak ke Sekolah Sahabat RM30 | Setup & Standby Jaga RM150/hari.',
+  'Unit PS5 kekal milik Pillar Stride Enterprise sepanjang tempoh sewa/setup.',
+  'Member bertanggungjawab menjaga peralatan sepanjang shift standby.',
+  'Kerosakan akibat kecuaian ditanggung oleh pihak yang bertugas.',
   'Bayaran ke Maybank 551584078633 atas nama Pillar Stride Enterprise.'
 ];
 
@@ -626,9 +629,7 @@ const App = {
         if (this.state.lockedNumber) { r.checked = this.state.docType === r.value; return alert('Nombor dikunci semasa edit.'); }
         this.state.docType = r.value;
         this.state.terms = r.value === 'quotation' ? [...TERMS_QUO] : [...TERMS_INV];
-        $('docSubject').value = r.value === 'quotation'
-          ? 'SEBUTHARGA PEMBEKALAN PAKEJ LENGKAP MESIN SLUSHY'
-          : 'INVOIS PEMBEKALAN PAKEJ LENGKAP MESIN SLUSHY';
+        $('docSubject').value = r.value === 'quotation' ? SUBJECT_QUO : SUBJECT_INV;
         $('refQuoWrap').hidden = r.value !== 'invoice';
         $('dueWrap').hidden = r.value !== 'invoice';
         $('btnConvertInv').style.display = r.value === 'quotation' ? 'inline-block' : 'none';
@@ -892,7 +893,7 @@ const App = {
     }
     this.state = { docType: 'quotation', items: DEFAULT_ITEMS.map(i => ({ ...i })), terms: [...TERMS_QUO], mode: 'new', finalized: false, lockedNumber: null, editingVersion: null, discount: { type: 'none', value: 0, label: '' } };
     document.querySelector('input[name="docType"][value="quotation"]').checked = true;
-    $('docSubject').value = 'SEBUTHARGA PEMBEKALAN PAKEJ LENGKAP MESIN SLUSHY';
+    $('docSubject').value = SUBJECT_QUO;
     $('refQuotation').value = '';
     $('sstEnabled').checked = false;
     $('clientName').value = $('clientAttn').value = $('clientAddress').value = '';
@@ -990,7 +991,7 @@ const App = {
     $('clientAddress').value = snap.clientAddress;
     $('clientPhone').value = snap.clientPhone;
     $('clientEmail').value = snap.clientEmail;
-    $('docSubject').value = 'INVOIS PEMBEKALAN PAKEJ LENGKAP MESIN SLUSHY';
+    $('docSubject').value = SUBJECT_INV;
     $('refQuoWrap').hidden = false;
     $('dueWrap').hidden = false;
     this.renderItems();
