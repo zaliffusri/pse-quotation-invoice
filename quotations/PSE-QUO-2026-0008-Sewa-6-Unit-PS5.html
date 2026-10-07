@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <title>PSE-QUO-2026-0008 — Sebutharga Sewa 6 Unit PS5</title>
+  <style>
+    :root {
+      --navy: #0f2744;
+      --gold: #c9a227;
+      --gold-light: #f7f1de;
+      --border: #d1d5db;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      color: #1f2937;
+      background: #fff;
+    }
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      padding: 16mm 16mm 18mm;
+      margin: 0 auto;
+    }
+    .pv-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      border-bottom: 2px solid var(--navy);
+      padding-bottom: .7rem;
+      margin-bottom: .9rem;
+    }
+    .brand img { height: 48px; margin-bottom: .35rem; }
+    .brand strong { display: block; font-size: 11pt; color: var(--navy); }
+    .brand .meta { font-size: 8.5pt; line-height: 1.4; color: #374151; }
+    .pv-right { text-align: right; font-size: 9pt; line-height: 1.5; }
+    .pv-type { font-size: 16pt; font-weight: 700; color: var(--navy); margin-bottom: .2rem; }
+    .pv-client {
+      margin: .5rem 0 .8rem;
+      font-size: 9.5pt;
+      line-height: 1.5;
+      padding: .55rem .7rem;
+      background: #f8fafc;
+      border-left: 3px solid var(--navy);
+    }
+    .pv-subject {
+      font-weight: 700;
+      color: var(--navy);
+      margin: .7rem 0;
+      text-transform: uppercase;
+      font-size: 10.5pt;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5pt;
+      margin: .6rem 0 1rem;
+    }
+    th {
+      background: var(--navy);
+      color: #fff;
+      padding: .45rem .4rem;
+      text-align: left;
+    }
+    td {
+      padding: .4rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .r { text-align: right; }
+    .c { text-align: center; }
+    tfoot td { border-bottom: none; padding-top: .45rem; }
+    tfoot tr.total td {
+      border-top: 2px solid var(--navy);
+      font-size: 11pt;
+      padding-top: .55rem;
+    }
+    .note {
+      font-size: 8.5pt;
+      color: #4b5563;
+      margin: .2rem 0 .8rem;
+    }
+    .pv-terms { font-size: 8.5pt; margin: 1rem 0; }
+    .pv-terms ol { margin: .35rem 0 0 1.1rem; padding: 0; }
+    .pv-terms li { margin-bottom: .25rem; }
+    .pv-bank {
+      background: var(--gold-light);
+      padding: .65rem .75rem;
+      border-radius: 6px;
+      font-size: 9pt;
+      margin-top: 1rem;
+    }
+    .period {
+      font-size: 9.5pt;
+      margin: .3rem 0 .6rem;
+    }
+    @media print {
+      @page { size: A4; margin: 0; }
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .page { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="pv-header">
+      <div class="brand">
+        <img src="../assets/logo-invoice.png" alt="PSE">
+        <strong>PILLAR STRIDE ENTERPRISE</strong>
+        <div class="meta">
+          (TR0299805-M)<br>
+          No. 27 Jalan Pinang Merah 4,<br>
+          Taman Sayong Pinang, Bandar Tenggara<br>
+          Kulai, Johor 81440<br>
+          zaliff2258@gmail.com | +60133663007
+        </div>
+      </div>
+      <div class="pv-right">
+        <div class="pv-type">SEBUTHARGA</div>
+        <div><b>Ruj.</b> PSE-QUO-2026-0008</div>
+        <div><b>Tarikh:</b> 07/10/2026</div>
+        <div><b>Sah hingga:</b> 14/10/2026</div>
+      </div>
+    </div>
+
+    <div class="pv-client">
+      <b>Kepada:</b><br>
+      Pelanggan<br>
+      <span style="color:#6b7280">(Sila isi nama / organisasi pelanggan)</span>
+    </div>
+
+    <p>Tuan/Puan,</p>
+    <p class="pv-subject">SEBUTHARGA SEWA 6 UNIT PS5 &amp; GAMING MONITOR (1 HARI)</p>
+    <p class="period"><b>Tempoh sewa:</b> 1 hari</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width:8%">No</th>
+          <th>Item</th>
+          <th class="r" style="width:16%">Harga (RM)</th>
+          <th class="c" style="width:10%">Qty</th>
+          <th class="r" style="width:16%">Jumlah (RM)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Sewa PS5 (1 hari)<br><span class="note" style="margin:0">Kadar semasa RM60/unit/hari</span></td>
+          <td class="r">60.00</td>
+          <td class="c">6</td>
+          <td class="r">360.00</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Gaming Monitor (1 hari)<br><span class="note" style="margin:0">Kadar RM20/unit/hari</span></td>
+          <td class="r">20.00</td>
+          <td class="c">6</td>
+          <td class="r">120.00</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Marshall serta Setup</td>
+          <td class="r">200.00</td>
+          <td class="c">1</td>
+          <td class="r">200.00</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Delivery</td>
+          <td class="r">80.00</td>
+          <td class="c">1</td>
+          <td class="r">80.00</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="4" class="r"><b>Subjumlah</b></td>
+          <td class="r">760.00</td>
+        </tr>
+        <tr class="total">
+          <td colspan="4" class="r"><b>JUMLAH (RM)</b></td>
+          <td class="r"><b>760.00</b></td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div class="pv-terms">
+      <b>Terma &amp; Syarat</b>
+      <ol>
+        <li>Sebutharga ini sah selama 7 hari dari tarikh dikeluarkan.</li>
+        <li>Kadar sewa PS5: RM60/unit/hari. Gaming monitor: RM20/unit/hari.</li>
+        <li>Unit PS5, monitor dan Marshall kekal milik Pillar Stride Enterprise sepanjang tempoh sewa.</li>
+        <li>Pelanggan bertanggungjawab menjaga peralatan; kerosakan akibat kecuaian ditanggung pelanggan.</li>
+        <li>Deposit / bayaran pendahuluan boleh dikenakan sebelum penghantaran.</li>
+        <li>Bayaran ke Maybank 5515 8407 8633 atas nama Pillar Stride Enterprise. Rujukan: PSE-QUO-2026-0008.</li>
+      </ol>
+    </div>
+
+    <div class="pv-bank">
+      <b>Maklumat Pembayaran</b><br>
+      PILLAR STRIDE ENTERPRISE | Maybank | 5515 8407 8633<br>
+      <em>Rujukan: PSE-QUO-2026-0008</em>
+    </div>
+  </div>
+</body>
+</html>
