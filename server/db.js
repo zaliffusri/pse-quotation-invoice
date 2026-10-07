@@ -63,16 +63,57 @@ function logActivity(action, docNumber = null, meta = null) {
   if (!getSetting('numberFormat')) setSetting('numberFormat', 'standard');
   if (!getSetting('products')) {
     setSetting('products', [
-      { id: 'ps5-basic', name: 'PS5 Basic Package (1 hari)', price: 50, category: 'rental' },
+      { id: 'ps5-sewa', name: 'Sewa PS5 (1 hari)', price: 60, category: 'rental' },
+      { id: 'gaming-monitor', name: 'Gaming Monitor (1 hari)', price: 20, category: 'rental' },
+      { id: 'marshall-setup', name: 'Marshall serta Setup', price: 200, category: 'service' },
+      { id: 'delivery', name: 'Delivery', price: 80, category: 'transport' },
       { id: 'controller', name: 'Tambahan Controller', price: 15, category: 'addon' },
       { id: 'hdmi', name: 'Tambahan HDMI Cable', price: 10, category: 'addon' }
     ]);
+  } else {
+    const products = getSetting('products', []);
+    const rentalRates = [
+      { id: 'ps5-sewa', name: 'Sewa PS5 (1 hari)', price: 60, category: 'rental' },
+      { id: 'gaming-monitor', name: 'Gaming Monitor (1 hari)', price: 20, category: 'rental' },
+      { id: 'marshall-setup', name: 'Marshall serta Setup', price: 200, category: 'service' },
+      { id: 'delivery', name: 'Delivery', price: 80, category: 'transport' }
+    ];
+    let changed = false;
+    for (const rate of rentalRates) {
+      const idx = products.findIndex(p => p.id === rate.id);
+      if (idx === -1) {
+        products.push(rate);
+        changed = true;
+      } else if (
+        products[idx].name !== rate.name ||
+        Number(products[idx].price) !== rate.price ||
+        products[idx].category !== rate.category
+      ) {
+        products[idx] = { ...products[idx], ...rate };
+        changed = true;
+      }
+    }
+    // Migrate legacy PS5 basic package price to RM60/day
+    const legacyIdx = products.findIndex(p => p.id === 'ps5-basic' || p.id === 'ps5-set');
+    if (legacyIdx !== -1 && Number(products[legacyIdx].price) !== 60) {
+      products[legacyIdx] = {
+        ...products[legacyIdx],
+        name: products[legacyIdx].id === 'ps5-set' ? '1 Set PS5' : 'Sewa PS5 (1 hari)',
+        price: 60,
+        category: 'rental'
+      };
+      changed = true;
+    }
+    if (changed) setSetting('products', products);
   }
   if (!getSetting('units')) {
     setSetting('units', [
       { id: 'ps5-1', name: 'PS5 Unit #1', active: true },
       { id: 'ps5-2', name: 'PS5 Unit #2', active: true },
-      { id: 'ps5-3', name: 'PS5 Unit #3', active: true }
+      { id: 'ps5-3', name: 'PS5 Unit #3', active: true },
+      { id: 'ps5-4', name: 'PS5 Unit #4', active: true },
+      { id: 'ps5-5', name: 'PS5 Unit #5', active: true },
+      { id: 'ps5-6', name: 'PS5 Unit #6', active: true }
     ]);
   }
   if (!getSetting('promos')) {
